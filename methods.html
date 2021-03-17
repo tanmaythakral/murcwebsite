@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>React App</title>
+    <!--bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- jquery -->
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="murcwebsite.css"></link>
+  </head>
+  <body> 
+      <nav id="nav-section" class="navbar navbar-expand-lg navbar-light ">
+        <a class="nav-link" href="murcwebsite.html"><h1 class="heading-top">REX</h1></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="methods.html"><h3 class="heading-top">Methods </h3> <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="results.html"><h3 class="heading-top">Results</h3></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="discussion.html"><h3 class="heading-top">Discussion</h3></a>
+              </li> 
+        <li class="nav-item">
+          <a class="nav-link" href="about.html"><h3 class="heading-top">About</h3></a>
+        </li>
+        
+      </ul>
+    </div>
+  </nav>
+
+
+  <div class="body-div">
+      <h1 id ="title-top">Methods</h1>
+<ul>
+  <li>
+    Import patient clinical and miRNA expression data from the TCGA database to a Python dataframe
+  </li>
+  <li>
+    Filter out outliers and data points with statistically low variability
+  </li>
+  <li>
+    Normalize values in the filtered dataset
+  </li>
+  <li>
+    Unsupervised hierarchical clustering to generate a dendrogram
+  </li>
+  <li>
+    Visualize clusters by generating a heatmap
+  </li>
+  <li>
+    Chi-squared test to compare molecular subtypes with clusters
+  </li>
+  <li>
+    Perform survival analysis on clusters
+  </li>
+</ul>
+<br>
+<br>
+<br>
+
+<img class = "img-responsive" src="workflow.png" width="35%" height="35%" />
+<br>
+<br>
+<br>
+<h1 id ="title-top">Code</h1>
+<br>
+
+<pre class="prettyprint"><code class="language-py">
+  import glob
+  import pandas as pd
+  import numpy as np
+  import matplotlib.pyplot as plt
+  %matplotlib inline
+  import seaborn as sns
+  
+  
+  # import case UUIDs
+  
+  def case_id_import(filepath):
+      file = filepath
+      result = []
+      readfile = pd.read_json(file)
+      readfile = readfile['associated_entities']
+      result.append(readfile)
+      data_frame = pd.concat(result)
+  
+      case_UUID = [d[0]['case_id'] for d in data_frame]
+  
+      case_uuid = []
+      for uid in case_UUID:
+          case_uuid.append(uid.upper())
+      case_uuid
+  
+  case_id_import(#filepath here)
+</code></pre>
+<br>
+
+<pre class="prettyprint"><code class="language-py"></code>
+# data import
+
+def data_import(filepath):
+    path = filepath
+    all_files = glob.glob(path + "/*.txt")
+
+    result = []
+    for file in all_files:
+        readfile = pd.read_csv(file , sep = "\t")
+        pivoted_file = readfile.pivot_table(columns = "miRNA_ID" , values = "reads_per_million_miRNA_mapped")
+        result.append(pivoted_file)
+
+    miRNA_data = pd.concat(result)
+    miRNA_data['bcr_patient_uuid'] = case_uuid
+    miRNA_data
+data_import(#data filepath here)
+</code></pre>
+<br>
+
+<pre class="prettyprint"><code class="language-py"></code>
+  # filtering out values beyond 99 percentile and miRNAs that have no data
+miRNA_data = miRNA_data.set_index('bcr_patient_uuid')
+miRNA_data = pd.DataFrame(miRNA_data)
+miRNA_data = miRNA_data[miRNA_data < np.percentile(miRNA_data,99)].dropna(axis = 1)
+miRNA_data = miRNA_data.loc[:, (miRNA_data != 0).any(axis=0)]
+miRNA_data
+</code></pre>
+<br>
+
+<pre class="prettyprint"><code class="language-py"></code>
+  # Mean Absolute Deviation
+mad = miRNA_data.mad()
+sortedmad = mad.sort_values()
+head = sortedmad.head(425)
+head = head.index
+heads = head.tolist()
+miRNA_data = miRNA_data.drop(heads,axis=1)
+
+uids = []
+miRNA_data = miRNA_data.reset_index(level=0)
+uids = miRNA_data['bcr_patient_uuid']
+miRNA_data = miRNA_data.set_index('bcr_patient_uuid')
+miRNA_data
+</code></pre>
+<br>
+
+<pre class="prettyprint"><code class="language-py"></code>
+  # Z normalization
+from sklearn.preprocessing import StandardScaler
+std_scaler = StandardScaler()
+std_scaler
+# fit and transform the data
+miRNA_data.std(ddof=0)
+miRNA_data = pd.DataFrame(std_scaler.fit_transform(miRNA_data), columns=miRNA_data.columns)
+miRNA_data['bcr_patient_uuid'] = uids
+miRNA_data = miRNA_data.set_index('bcr_patient_uuid')
+miRNA_data
+</code></pre>
+<br>
+
+<pre class="prettyprint"><code class="language-py"></code>
+  # molecular subtyping
+def uuid_import(filepath):
+    read = pd.read_csv(filepath , sep = "\t")
+uuid_import(#filepath here)
+
+def subtype(er_status_by_ihc,pr_status_by_ihc,her2_status_by_ihc):
+    if er_status_by_ihc == 'Positive' and pr_status_by_ihc == 'Positive' and her2_status_by_ihc == 'Negative':
+        return 'Luminal A'
+    elif er_status_by_ihc == 'Positive' and pr_status_by_ihc == 'Negative' and her2_status_by_ihc == 'Positive':
+        return 'Luminal B'
+    elif er_status_by_ihc == 'Negative' and pr_status_by_ihc == 'Negative' and her2_status_by_ihc == 'Positive':
+        return 'HER2-Enriched'
+    elif er_status_by_ihc == 'Negative' and pr_status_by_ihc == 'Negative' and her2_status_by_ihc == 'Negative':
+        return 'Triple-Negative'
+    else:
+        return 'Unknown'
+
+Subtype = []
+for row in read.itertuples(index = True, name ='Pandas'): 
+    Subtype.append(subtype(getattr(row, "er_status_by_ihc"), getattr(row, "pr_status_by_ihc"),getattr(row, "her2_status_by_ihc")))
+
+read['Subtype'] = Subtype
+selected = read[['bcr_patient_uuid','er_status_by_ihc','pr_status_by_ihc','her2_status_by_ihc','Subtype', 'vital_status', 'last_contact_days_to', 'death_days_to']]
+subtype_df = selected.drop([selected.index[0], selected.index[1]]) 
+
+
+uppercase = []
+for case in subtype_df['bcr_patient_uuid']:
+    capitalized = case.upper()
+    uppercase.append(capitalized)
+subtype_df['bcr_patient_uuid'] = uppercase
+subtype_df
+</code></pre>
+<br>
+
+<pre class="prettyprint"><code class="language-py"></code>
+  # clustering
+
+miRNA_data = miRNA_data.reset_index(level=0)
+miRNA_data = miRNA_data.drop(miRNA_data[ miRNA_data['bcr_patient_uuid'] == '05135396-DF5C-49DB-B34E-F4ADD5B65A2B' ].index)
+miRNA_data = miRNA_data.drop(miRNA_data[ miRNA_data['bcr_patient_uuid'] == '6A186809-3422-41D0-83D2-867145830936' ].index)
+miRNA_data = miRNA_data.drop(miRNA_data[ miRNA_data['bcr_patient_uuid'] == '6E126B73-D3E8-4641-A128-306F3B313E40' ].index)
+miRNA_data = miRNA_data.set_index('bcr_patient_uuid')
+
+
+from sklearn.cluster import AgglomerativeClustering
+cluster = AgglomerativeClustering(n_clusters = 4, affinity = 'euclidean', linkage = 'ward')  
+clusterdata = cluster.fit_predict(miRNA_data)
+miRNA_data['cluster'] = clusterdata
+miRNA_data = miRNA_data.reset_index(level=0)
+merged_miRNA_df = pd.merge(subtype_df, miRNA_data, on = 'bcr_patient_uuid', how = 'left')
+
+
+miRNA_grouped_data = merged_miRNA_df[['Subtype','cluster']]
+miRNA_grouped_data = miRNA_grouped_data.groupby(['cluster','Subtype'])
+count = miRNA_grouped_data.size()
+miRNA_grouped_data = count.to_frame()
+miRNA_grouped_data.columns = ['count']
+miRNA_grouped_data = miRNA_grouped_data.reset_index()
+miRNA_grouped_data = miRNA_grouped_data.pivot_table(columns = "Subtype" , values = "count",index = 'cluster').fillna(0)
+miRNA_grouped_data
+</code></pre>
+<br>
+
+<pre class="prettyprint"><code class="language-py"></code>
+  # chi squared test for cluster and subtype
+
+from scipy.stats import chi2_contingency
+import pandas as pd
+import numpy as np
+
+miRNA_grouped_data = miRNA_grouped_data.drop(columns = "Unknown")
+
+chi2_contingency(miRNA_grouped_data)
+df_1 = chi2_contingency(miRNA_grouped_data)[3]
+
+pd.DataFrame(
+    data=df_1[:,:], 
+    index=miRNA_grouped_data.index,
+    columns=miRNA_grouped_data.columns
+).round(2)
+
+chisquare=chi2_contingency(miRNA_grouped_data)[0]
+
+pvalue=chi2_contingency(miRNA_grouped_data)[1]
+
+dof=chi2_contingency(miRNA_grouped_data)[2]
+
+from scipy.stats import chi2
+significance = 0.01
+p = 1 - significance
+dof = chi2_contingency(miRNA_grouped_data)[2]
+critical_value = chi2.ppf(p, dof)
+
+p = chi2.cdf(critical_value, dof)
+
+chi, pval, dof, exp = chi2_contingency(miRNA_grouped_data)
+print('p-value is: ', pval)
+significance = 0.05
+p = 1 - significance
+critical_value = chi2.ppf(p, dof)
+print('chi=%.6f, critical value=%.6f\n' % (chi, critical_value))
+if chi > critical_value:
+    print("""At %.2f level of significance, we reject the null hypotheses and accept H1. 
+They are not independent.""" % (significance))
+else:
+    print("""At %.2f level of significance, we accept the null hypotheses. 
+They are independent.""" % (significance))
+    
+
+chi, pval, dof, exp = chi2_contingency(miRNA_grouped_data)
+significance = 0.05
+print('p-value=%.6f, significance=%.2f\n' % (pval, significance))
+if pval < significance:
+    print("""At %.2f level of significance, we reject the null hypotheses and accept H1. 
+They are not independent.""" % (significance))
+else:
+    print("""At %.2f level of significance, we accept the null hypotheses. 
+They are independent.""" % (significance))
+</code></pre>
+<br>
+
+<pre class="prettyprint"><code class="language-py"></code>
+  # Kaplan Meier
+
+merged_miRNA_df = merged_miRNA_df.replace('Dead', '1')
+merged_miRNA_df = merged_miRNA_df.replace('Alive', '0')
+merged_miRNA_df = merged_miRNA_df.replace('[Not Available]', '')
+merged_miRNA_df = merged_miRNA_df.replace('[Not Applicable]', '')
+merged_miRNA_df = merged_miRNA_df.fillna(0)
+merged_miRNA_df['duration'] = merged_miRNA_df['last_contact_days_to'] + merged_miRNA_df['death_days_to']
+
+
+selected_miRNA_df = merged_miRNA_df[['bcr_patient_uuid','er_status_by_ihc','pr_status_by_ihc','her2_status_by_ihc','Subtype','vital_status','last_contact_days_to','death_days_to','duration','cluster']]
+selected_miRNA_df_clustered = selected_miRNA_df.groupby('cluster')
+
+from lifelines import KaplanMeierFitter
+
+selected_miRNA_df_clustered.get_group(0)
+
+for x in set(merged_miRNA_df['cluster'].tolist()):
+    kmf = KaplanMeierFitter()
+    kmf.fit(durations = selected_miRNA_df_clustered.get_group(x)['duration'], event_observed = selected_miRNA_df_clustered.get_group(x)['vital_status'],label='Kaplan Meier Estimate cluster: ' + str(x))
+    kmf.plot(ci_show=False)
+</code></pre>
+<br>
+
+<pre class="prettyprint"><code class="language-py"></code>
+  #LogRank Test
+
+from lifelines.statistics import logrank_test
+from itertools import combinations
+
+comb = combinations(set(merged_miRNA_df['cluster'].tolist()),2)
+
+for i in comb:
+    print(i)
+    results = logrank_test(selected_miRNA_df_clustered.get_group(i[0])['duration'].astype(int), selected_miRNA_df_clustered.get_group(i[1])['duration'].astype(int), selected_miRNA_df_clustered.get_group(i[0])['vital_status'].astype(int), selected_miRNA_df_clustered.get_group(i[1])['vital_status'].astype(int), alpha=.05)
+    print(results)
+  </code></pre>
+</div>
+    <div id="root"></div>
+    <footer id="footer">
+        <p>Made for UBC REX project </p>
+    </footer>
+  </body>
+</html>

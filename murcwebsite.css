@@ -1,0 +1,38 @@
+.heading-top{
+    font-family: 'Roboto Condensed', sans-serif;
+    color: grey;
+    
+}
+#title-top{
+  font-family: 'Roboto Condensed', sans-serif;
+  color: grey;
+}
+.body-div{
+  padding: auto;
+  margin: 5%;
+}
+#nav-section{
+    padding: 2%;
+    padding-right: 2.5%;
+}
+#footer{
+  position: fixed;
+  left: 10%;
+  bottom: 0;
+  width: 75%;
+  font-family: 'Roboto Condensed', sans-serif;
+  color: grey;
+  text-shadow: 1px 1px 1px whitesmoke;
+  text-align: center;
+}
+
+.container-fluid{
+  align-self: center;
+}
+.btn-secondary{
+  padding:10px;
+  box-sizing: content-box;
+  margin: 4% 1.7%;
+  min-width: 15%;
+  text-align: center;
+}
