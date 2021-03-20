@@ -12,7 +12,7 @@
   </head>
   <body> 
       <nav id="nav-section" class="navbar navbar-expand-lg navbar-light ">
-        <a class="nav-link" href="index.html"><h1 class="heading-top">Home</h1></a>
+        <a class="nav-link" href="index.html"><h1 class="heading-top">REX</h1></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -32,39 +32,63 @@
           <a class="nav-link" href="about.html"><h3 class="heading-top">Future Directions</h3></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="supplementaryinfo.html"><h3 class="heading-top">Supplementary Information</h3></a>
-        </li>
+            <a class="nav-link" href="supplementaryinfo.html"><h3 class="heading-top">Supplementary Information</h3></a>
+          </li>
         
       </ul>
     </div>
   </nav>
 
 
-  <div class="body-div">
-    <h1 id ="title-top">Results</h1>
+<div class="body-div">
+    <h1 id ="title-top">Supplementary Information</h1>
     <br>
-    <img class = "img-responsive" src="heat_map_1100.png" width="35%" height="35%" />
     <br>
-      <p>
-        <p style="font-weight: bold;">Figure 1: Heat map shows clustering pattern </p>
-        A total of 1100 miRNAs and 1203 tumour samples are represented. Red represents high expression, while blue represents low expression. Dendrograms represent the relatedness of miRNAs (x-axis) or patient tumour samples (y-axis). 
-      </p>
-      <img class = "img-responsive" src="cluster_table.png" width="35%" height="35%" />
-      <p>
-        <p style="font-weight: bold;">Table 1: Molecular subtyping of tumours</p>
-      The molecular subtype of each patient tumour sample in each cluster is determined. Unknown indicates ambiguous or indeterminate data.
-      </p>
-      <br>
-      <img class = "img-responsive" src="kmfplot2.png" width="35%" height="35%" />
-      <br>
-      <p>
-        <p style="font-weight: bold;">Figure 2: Survival curve of tumour clusters </p>
-The decreasing survival rate over time for each cluster is plotted on a Kaplan meier survival plot.
 
-      </p>
+    <div class="row">
+        <div class="col ">Data from TCGA
+            <a type="button" class="btn btn-secondary"  href="https://drive.google.com/uc?export=download&id=1X8qBGtioxmn7mNMIiPUlfMjqrUG5wRqR">Download</a></div>
+            
     </div>
-    <div id="root">
-      
+    <div class="row">
+        <div class="col ">Filtered Data
+            <a type="button" class="btn btn-secondary"  href="https://drive.google.com/uc?export=download&id=10AHo7JPmhJk-Jty0X7rZeJgqAqGM2pHs">Download</a></div>
     </div>
-  </body>
+
+    <div class="row">
+        <div class="col ">Normalized Data
+            <a type="button" class="btn btn-secondary"  href="https://drive.google.com/uc?export=download&id=1J1vclPmproput9p-JS9O2EznX1l7Q4rk">Download</a></div>
+    </div>
+    <div class="row">
+        <div class="col ">Subtype and Survival Data
+            <a type="button" class="btn btn-secondary"  href="https://drive.google.com/uc?export=download&id=1bHIniobKMkbc8X4ZI4OdPmYsBTDAznx2">Download</a></div>       
+    </div>
+
+    <h1 id ="title-top">Analyses</h1>
+
+    <br>
+    <br>
+
+    <h3 style="color: grey;">Log Rank Test</h3>
+
+    <p>Log rank tests are performed on each unique combination of cluster pairs, they yield p-values to determine if two Kaplan Meier curves are significantly different from each other. As a result for the log rank tests, all p-values are greater than 0.05. None of the clusters have significantly different survival outcomes to another.
+    </p>
+    <img class = "img-responsive" src="Log_rank_test_pg1.png" />
+
+    <h3 style="color: grey;">Chi-Square Score Test</h3>
+
+    <p>
+      P-value (0.24) is greater than the significance level (0.01)
+      <br>
+      Fail to reject the null hypothesis
+      <br>
+      Interpretation: our miRNA clusters do not correlate with molecular subtypes
+    </p>
+
+</div>
+<div id="root"></div>
+<footer id="footer">
+    <p>Made for UBC REX project </p>
+</footer>
+</body>
 </html>
