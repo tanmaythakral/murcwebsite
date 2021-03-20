@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>React App</title>
+    <title>Breast Cancer bioinformatics analysis</title>
     <!--bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!-- jquery -->
@@ -29,7 +29,7 @@
               <a class="nav-link" href="discussion.html"><h3 class="heading-top">Discussion</h3></a>
               </li> 
         <li class="nav-item">
-          <a class="nav-link" href="about.html"><h3 class="heading-top">About</h3></a>
+          <a class="nav-link" href="about.html"><h3 class="heading-top">Future Directions</h3></a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="supplementaryinfo.html"><h3 class="heading-top">Supplementary Information</h3></a>
@@ -66,6 +66,24 @@
 
     <h1 id ="title-top">Analyses</h1>
 
+    <br>
+    <br>
+
+    <h3 style="color: grey;">Log Rank Test</h3>
+
+    <p>Log rank tests are performed on each unique combination of cluster pairs, they yield p-values to determine if two Kaplan Meier curves are significantly different from each other. As a result for the log rank tests, all p-values are greater than 0.05. None of the clusters have significantly different survival outcomes to another.
+    </p>
+    <img class = "img-responsive" src="Log_rank_test_pg1.png" />
+
+    <h3 style="color: grey;">Chi-Square Score Test</h3>
+
+    <p>
+      P-value (0.24) is greater than the significance level (0.01)
+      <br>
+      Fail to reject the null hypothesis
+      <br>
+      Interpretation: our miRNA clusters do not correlate with molecular subtypes
+    </p>
 
 </div>
 <div id="root"></div>
