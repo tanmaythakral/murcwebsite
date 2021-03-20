@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Breast Cancer bioinformatics analysis</title>
+    <!--bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="murcwebsite.css"></link>
+  </head>
+  <body> 
+      <nav id="nav-section" class="navbar navbar-expand-lg navbar-light ">
+        <a class="nav-link" href="index.html"><h1 class="heading-top">Home</h1></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="methods.html"><h3 class="heading-top">Methods </h3> <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="results.html"><h3 class="heading-top">Results</h3></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="discussion.html"><h3 class="heading-top">Discussion</h3></a>
+              </li> 
+        <li class="nav-item">
+          <a class="nav-link" href="about.html"><h3 class="heading-top">Future Directions</h3></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="supplementaryinfo.html"><h3 class="heading-top">Supplementary Information</h3></a>
+          </li>
+        
+      </ul>
+    </div>
+  </nav>
+
+
+<div class="body-div">
+    <h1 id ="title-top">Supplementary Information</h1>
+    <br>
+    <br>
+
+    <div class="row">
+        <div class="col ">Data from TCGA
+            <a type="button" class="btn btn-secondary"  href="https://drive.google.com/uc?export=download&id=1X8qBGtioxmn7mNMIiPUlfMjqrUG5wRqR">Download</a></div>
+            
+    </div>
+    <div class="row">
+        <div class="col ">Filtered Data
+            <a type="button" class="btn btn-secondary"  href="https://drive.google.com/uc?export=download&id=10AHo7JPmhJk-Jty0X7rZeJgqAqGM2pHs">Download</a></div>
+    </div>
+
+    <div class="row">
+        <div class="col ">Normalized Data
+            <a type="button" class="btn btn-secondary"  href="https://drive.google.com/uc?export=download&id=1J1vclPmproput9p-JS9O2EznX1l7Q4rk">Download</a></div>
+    </div>
+    <div class="row">
+        <div class="col ">Subtype and Survival Data
+            <a type="button" class="btn btn-secondary"  href="https://drive.google.com/uc?export=download&id=1bHIniobKMkbc8X4ZI4OdPmYsBTDAznx2">Download</a></div>       
+    </div>
+
+    <h1 id ="title-top">Analyses</h1>
+
+    <br>
+    <br>
+
+    <h3 style="color: grey;">Log Rank Test</h3>
+
+    <p>Log rank tests are performed on each unique combination of cluster pairs, they yield p-values to determine if two Kaplan Meier curves are significantly different from each other. As a result for the log rank tests, all p-values are greater than 0.05. None of the clusters have significantly different survival outcomes to another.
+    </p>
+    <img class = "img-responsive" src="Log_rank_test_pg1.png" />
+
+    <h3 style="color: grey;">Chi-Square Score Test</h3>
+
+    <p>
+      P-value (0.24) is greater than the significance level (0.01)
+      <br>
+      Fail to reject the null hypothesis
+      <br>
+      Interpretation: our miRNA clusters do not correlate with molecular subtypes
+    </p>
+
+</div>
+<div id="root"></div>
+</body>
+</html>
